@@ -1,0 +1,105 @@
+{"check_type": {
+  "group_policy": {
+    "group_policy": "Microsoft Security Compliance Toolkit",
+    "if": {
+      "condition": {
+        "custom_item": [
+          {
+            "value_type": "POLICY_TEXT",
+            "reg_item": "ProductName",
+            "description": "Windows 10 is installed",
+            "check_type": "CHECK_REGEX",
+            "value_data": "^[Ww][Ii][Nn][Dd][Oo][Ww][Ss] 10.+$",
+            "type": "REGISTRY_SETTING",
+            "reg_key": "HKLM\\Software\\Microsoft\\Windows Nt\\Currentversion"
+          },
+          {
+            "value_type": "POLICY_TEXT",
+            "reg_item": "ReleaseId",
+            "description": "Check Windows Release",
+            "check_type": "CHECK_REGEX",
+            "value_data": "1909",
+            "type": "REGISTRY_SETTING",
+            "reg_key": "HKLM\\Software\\Microsoft\\Windows Nt\\Currentversion"
+          }
+        ],
+        "type": "AND"
+      },
+      "else": {"report": {
+        "description": "MSCT_Windows_10_1909_v1.0.0.audit from MSCT Windows 10 Version 1909 and Windows Server Version 1909 Security Baseline",
+        "type": "WARNING",
+        "info": "NOTE: Nessus has not identified that the chosen audit applies to the target device."
+      }},
+      "then": {
+        "report": {
+          "description": "MSCT_Windows_10_1909_v1.0.0.audit from MSCT Windows 10 Version 1909 and Windows Server Version 1909 Security Baseline",
+          "type": "PASSED"
+        },
+        "custom_item": [
+          {
+            "reference": "800-53|IA-3(1),CSCv6|13,CSF|PR.AC-1,ITSG-33|IA-3(1),NESA|T5.4.3,QCSC-v1|13.2,TBA-FIISB|27.1",
+            "value_type": "POLICY_DWORD",
+            "solution": "Policy Path: Security Options\\nPolicy Setting Name: Domain member: Digitally encrypt secure channel data (when possible)",
+            "reg_item": "sealsecurechannel",
+            "description": "Domain member: Digitally encrypt secure channel data (when possible)",
+            "value_data": "1",
+            "type": "REGISTRY_SETTING",
+            "reg_key": "HKLM\\System\\CurrentControlSet\\Services\\Netlogon\\Parameters",
+            "see_also": "https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-final-for-windows-10-v1909-and-windows-server/ba-p/1023093",
+            "info": "Domain member: Digitally encrypt secure channel data (when possible)\\n\\nThis security setting determines whether a domain member attempts to negotiate encryption for all secure channel traffic that it initiates.\\n\\nWhen a computer joins a domain, a computer account is created. After that, when the system starts, it uses the computer account password to create a secure channel with a domain controller for its domain. This secure channel is used to perform operations such as NTLM passthrough authentication, LSA SID/name Lookup etc.\\n\\nThis setting determines whether or not the domain member attempts to negotiate encryption for all secure channel traffic that it initiates. If enabled, the domain member will request encryption of all secure channel traffic. If the domain controller supports encryption of all secure channel traffic, then all secure channel traffic will be encrypted. Otherwise only logon information transmitted over the secure channel will be encrypted. If this setting is disabled, then the domain member will not attempt to negotiate secure channel encryption.\\n\\nDefault: Enabled.\\n\\nImportant\\n\\nThere is no known reason for disabling this setting. Besides unnecessarily reducing the potential confidentiality level of the secure channel, disabling this setting may unnecessarily reduce secure channel throughput, because concurrent API calls that use the secure channel are only possible when the secure channel is signed or encrypted.\\n\\nNote: Domain controllers are also domain members and establish secure channels with other domain controllers in the same domain as well as domain controllers in trusted domains."
+          },
+          {
+            "reference": "800-171|3.1.7,800-53|AC-6(10),CN-L3|7.1.3.2(b),CN-L3|7.1.3.2(g),CN-L3|8.1.4.2(d),CN-L3|8.1.10.6(a),CSCv6|16.9,CSF|PR.AC-4,ITSG-33|AC-6,NESA|T5.1.1,NESA|T5.2.2,NESA|T5.4.1,NESA|T5.4.4,NESA|T5.4.5,NESA|T5.5.4,NESA|T5.6.1,NESA|T7.5.3,NIAv2|AM1,NIAv2|AM23f,NIAv2|SS13c,NIAv2|SS15c,QCSC-v1|5.2.2,QCSC-v1|6.2,SWIFT-CSCv1|5.1,TBA-FIISB|31.4.2,TBA-FIISB|31.4.3",
+            "value_type": "POLICY_DWORD",
+            "solution": "Policy Path: LAPS\\nPolicy Setting Name: Enable local admin password management",
+            "reg_item": "AdmPwdEnabled",
+            "reg_option": "CAN_NOT_BE_NULL",
+            "description": "Enable local admin password management",
+            "value_data": "1",
+            "type": "REGISTRY_SETTING",
+            "reg_key": "HKLM\\Software\\Policies\\Microsoft Services\\AdmPwd",
+            "see_also": "https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-final-for-windows-10-v1909-and-windows-server/ba-p/1023093",
+            "info": "Enables management of password for local administrator account\\nIf you enable this setting, local administrator password is managed\\nIf you disable or not configure this setting, local administrator password is NOT managed"
+          },
+          {
+            "reference": "800-171|3.1.8,800-53|AC-7a.,CN-L3|8.1.4.1(b),CSCv6|16.7,ITSG-33|AC-7a.,NESA|T5.5.1,NIAv2|AM24,TBA-FIISB|45.1.2,TBA-FIISB|45.2.1,TBA-FIISB|45.2.2",
+            "lockout_policy": "LOCKOUT_THRESHOLD",
+            "value_type": "POLICY_DWORD",
+            "solution": "Policy Path: Security Options\\nPolicy Setting Name: Interactive logon: Machine account lockout threshold",
+            "description": "Interactive logon: Machine account lockout threshold",
+            "value_data": "[1..10]",
+            "type": "LOCKOUT_POLICY",
+            "see_also": "https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-final-for-windows-10-v1909-and-windows-server/ba-p/1023093",
+            "info": "Interactive logon: Machine account threshold.\\nThe machine lockout policy is enforced only on those machines that have Bitlocker enabled for protecting OS volumes. Please ensure that appropriate recovery password backup policies are enabled.\\n\\nThis security setting determines the number of failed logon attempts that causes the machine to be locked out. A locked out machine can only be recovered by providing recovery key at console. You can set the value between 1 and 999 failed logon attempts. If you set the value to 0, the machine will never be locked out. Values from 1 to 3 will be interpreted as 4.\\n\\nFailed password attempts against workstations or member servers that have been locked using either CTRL+ALT+DELETE or password protected screen savers counts as failed logon attempts.\\n\\nThe machine lockout policy is enforced only on those machines that have Bitlocker enabled for protecting OS volumes. Please ensure that the appropriate recovery password backup policies are enabled."
+          },
+          {
+            "reference": "800-171|3.14.3,800-53|SI-5(7),CSCv6|13,CSF|ID.RA-1,CSF|ID.RA-2,CSF|ID.RA-3,CSF|RS.CO-5,ITSG-33|SI-5,NESA|T7.7.1,QCSC-v1|8.2.1,QCSC-v1|10.2.1,QCSC-v1|11.2",
+            "value_type": "POLICY_DWORD",
+            "solution": "Policy Path: Security Options\\nPolicy Setting Name: Microsoft network client: Send unencrypted password to third-party SMB servers",
+            "reg_item": "EnablePlainTextPassword",
+            "description": "Microsoft network client: Send unencrypted password to third-party SMB servers - EnablePlainTextPassword",
+            "value_data": "0",
+            "type": "REGISTRY_SETTING",
+            "reg_key": "HKLM\\System\\CurrentControlSet\\Services\\LanmanWorkstation\\Parameters",
+            "see_also": "https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-final-for-windows-10-v1909-and-windows-server/ba-p/1023093",
+            "info": "Microsoft network client: Send unencrypted password to connect to third-party SMB servers\\n\\nIf this security setting is enabled, the Server Message Block (SMB) redirector is allowed to send plaintext passwords to non-Microsoft SMB servers that do not support password encryption during authentication.\\n\\nSending unencrypted passwords is a security risk.\\n\\nDefault: Disabled."
+          },
+          {
+            "reference": "800-171|3.5.2,800-53|IA-5(6),CSCv6|16.14,CSF|PR.AC-1,ITSG-33|IA-5(6),NESA|T5.2.3,QCSC-v1|5.2.2,QCSC-v1|13.2,SWIFT-CSCv1|5.4,TBA-FIISB|26.1",
+            "value_type": "POLICY_DWORD",
+            "solution": "Policy Path: Security Options\\nPolicy Setting Name: Network security: Do not store LAN Manager hash value on next password change",
+            "reg_item": "NoLMHash",
+            "description": "Network security: Do not store LAN Manager hash value on next password change",
+            "value_data": "1",
+            "type": "REGISTRY_SETTING",
+            "reg_key": "HKLM\\System\\CurrentControlSet\\Control\\Lsa",
+            "see_also": "https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-final-for-windows-10-v1909-and-windows-server/ba-p/1023093",
+            "info": "Network security: Do not store LAN Manager hash value on next password change\\n\\nThis security setting determines if, at the next password change, the LAN Manager (LM) hash value for the new password is stored. The LM hash is relatively weak and prone to attack, as compared with the cryptographically stronger Windows NT hash. Since the LM hash is stored on the local computer in the security database the passwords can be compromised if the security database is attacked.\\n\\n\\nDefault on Windows Vista: Enabled\\nDefault on Windows XP: Disabled.\\n\\nImportant\\n\\nWindows 2000 Service Pack 2 (SP2) and above offer compatibility with authentication to previous versions of Windows, such as Microsoft Windows NT 4.0.\\nThis setting can affect the ability of computers running Windows 2000 Server, Windows 2000 Professional, Windows XP, and the Windows Server 2003 family to communicate with computers running Windows 95 and Windows 98."
+          }
+        ]
+      }
+    }
+  },
+  "check_type": "Windows",
+  "version": "2"
+}}
